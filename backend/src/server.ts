@@ -59,11 +59,15 @@ app.use('/api/', apiLimiter);
 const uploadDir = path.resolve(process.cwd(), process.env.UPLOAD_DIR || './uploads');
 app.use('/uploads', express.static(uploadDir));
 
-// 6. Application Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/items', itemsRoutes);
-app.use('/api/claims', claimsRoutes);
-app.use('/api/stats', statsRoutes);
+// 6. Application Routes (Supports direct /api or cloud proxy /api/backend)
+const router = express.Router();
+router.use('/auth', authRoutes);
+router.use('/items', itemsRoutes);
+router.use('/claims', claimsRoutes);
+router.use('/stats', statsRoutes);
+
+app.use('/api', router);
+app.use('/api/backend', router);
 
 // Health Check
 app.get('/health', (req, res) => {
