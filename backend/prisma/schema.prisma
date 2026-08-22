@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  name          String
+  avatar        String?
+  campusName    String    @default("Central Campus")
+  role          String    @default("STUDENT")
+  points        Int       @default(0) // Campus Karma / Return points
+  itemsReturned Int       @default(0) // Count of successfully returned items
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  items         Item[]
+  claims        Claim[]
+  notifications MatchNotification[]
+  messages      ChatMessage[]
+}
+
+model Item {
+  id              String    @id @default(uuid())
+  type            String    // "LOST" | "FOUND"
+  title           String
+  description     String
+  category        String    // "ELECTRONICS", "KEYS_CARDS", "CLOTHING", "ACCESSORIES", "BAGS", "DOCUMENTS", "OTHER"
+  locationName    String    // e.g. "Main Library, 2nd Floor"
+  latitude        Float
+  longitude       Float
+  imageUrl        String?
+  thumbnailUrl    String?
+  status          String    @default("OPEN") // "OPEN", "CLAIMED", "RESOLVED"
+  dateLostOrFound DateTime  @default(now())
+  contactEmail    String?
+  isAnonymous     Boolean   @default(false)
+  secretQuestion  String?   // e.g., "What color is the keychain attached to it?" for verification
+  handoverCode    String?   // Unique secure verification code for QR scan handover
+  pointsAwarded   Boolean   @default(false) // Whether returning points were granted
+  
+  userId          String
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  claims          Claim[]
+  messages        ChatMessage[]
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model Claim {
+  id                 String    @id @default(uuid())
+  itemId             String
+  item               Item      @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  claimantId         String
+  claimant           User      @relation(fields: [claimantId], references: [id], onDelete: Cascade)
+  
+  proofDescription   String
+  verificationAnswer String?
+  status             String    @default("PENDING") // "PENDING", "APPROVED", "REJECTED"
+  
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+}
+
+model MatchNotification {
+  id          String    @id @default(uuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lostItemId  String
+  foundItemId String
+  title       String
+  message     String
+  matchScore  Float     // 0 to 100
+  isRead      Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+}
+
+model ChatMessage {
+  id        String    @id @default(uuid())
+  itemId    String
+  item      Item      @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  senderId  String
+  sender    User      @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  text      String
+  createdAt DateTime  @default(now())
+}

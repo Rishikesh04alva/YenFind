@@ -1,0 +1,40 @@
+{
+  "name": "campus-lost-found-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start -p 3000",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@splinetool/react-spline": "^4.1.0",
+    "@splinetool/runtime": "^2.0.5",
+    "@types/mapbox-gl": "^3.4.1",
+    "@types/qrcode": "^1.5.6",
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.5.4",
+    "leaflet": "^1.9.4",
+    "lucide-react": "^0.439.0",
+    "mapbox-gl": "^3.29.0",
+    "next": "^14.2.10",
+    "qrcode.react": "^4.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-leaflet": "^4.2.1",
+    "react-map-gl": "^8.1.2",
+    "socket.io-client": "^4.7.5",
+    "tailwind-merge": "^2.5.2"
+  },
+  "devDependencies": {
+    "@types/leaflet": "^1.9.12",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.45",
+    "tailwindcss": "^3.4.11",
+    "typescript": "^5"
+  }
+}
